@@ -4,18 +4,12 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 
 ## Installation
 
-1. Clone the repo
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Build the content script:
-   ```
-   npm run build
-   ```
-4. Open `chrome://extensions` in Chrome
-5. Enable **Developer mode** (top right toggle)
-6. Click **Load unpacked** and select the project folder
+1. Download or clone this repo
+2. Open `chrome://extensions` in Chrome
+3. Enable **Developer mode** (top right toggle)
+4. Click **Load unpacked** and select the project folder
+
+No build step required — the repo includes the fully built extension.
 
 ## Setup
 
@@ -35,8 +29,9 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 
 ## Development
 
-Watch mode for automatic rebuilds:
+Install dependencies and use watch mode for automatic rebuilds:
 
 ```
+npm install
 npm run dev
 ```
