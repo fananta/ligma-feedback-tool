@@ -676,6 +676,22 @@ function mount() {
 
     setSendState?.("sending");
 
+    // Resolve the first Backlog workflow state for this team so issues
+    // land in Backlog instead of the default Triage.
+    let backlogStateId: string | undefined;
+    try {
+      const statesResult = await chrome.runtime.sendMessage({
+        type: "fetchLinearWorkflowStates",
+        apiKey,
+        teamId,
+      });
+      if (statesResult?.success && statesResult.stateId) {
+        backlogStateId = statesResult.stateId;
+      }
+    } catch {
+      // If fetch fails, proceed without stateId (Linear will default to Triage)
+    }
+
     let allSucceeded = true;
     const createdIssues: { identifier: string; url: string }[] = [];
 
@@ -693,6 +709,7 @@ function mount() {
           teamId,
           projectId: projectId || undefined,
           labelId: labelId || undefined,
+          stateId: backlogStateId,
           title,
           annotationId: annotation.id,
           fields: {

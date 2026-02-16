@@ -18005,6 +18005,18 @@
         return;
       }
       setSendState == null ? void 0 : setSendState("sending");
+      let backlogStateId;
+      try {
+        const statesResult = await chrome.runtime.sendMessage({
+          type: "fetchLinearWorkflowStates",
+          apiKey,
+          teamId
+        });
+        if ((statesResult == null ? void 0 : statesResult.success) && statesResult.stateId) {
+          backlogStateId = statesResult.stateId;
+        }
+      } catch {
+      }
       let allSucceeded = true;
       const createdIssues = [];
       for (const annotation of annotations) {
@@ -18017,6 +18029,7 @@
             teamId,
             projectId: projectId || void 0,
             labelId: labelId || void 0,
+            stateId: backlogStateId,
             title,
             annotationId: annotation.id,
             fields: {

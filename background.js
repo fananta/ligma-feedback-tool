@@ -414,6 +414,37 @@ async function handleFetchLinearLabels(msg) {
   }
 }
 
+// ─── Linear Workflow States ─────────────────────────────────────────
+// Fetches workflow states for a team and returns the first state in the
+// "backlog" category (sorted by position). Used to default new issues
+// to Backlog instead of Triage.
+
+async function handleFetchLinearWorkflowStates(msg) {
+  const { apiKey, teamId } = msg;
+  if (!apiKey || !teamId) return { success: false, stateId: null };
+  try {
+    const query = `{ team(id: "${teamId}") { states { nodes { id name type position } } } }`;
+    const resp = await fetch("https://api.linear.app/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({ query }),
+    });
+    if (!resp.ok) return { success: false, stateId: null };
+    const json = await resp.json();
+    const states = json?.data?.team?.states?.nodes || [];
+    const backlogStates = states
+      .filter((s) => s.type === "backlog")
+      .sort((a, b) => a.position - b.position);
+    const stateId = backlogStates.length > 0 ? backlogStates[0].id : null;
+    return { success: true, stateId };
+  } catch {
+    return { success: false, stateId: null };
+  }
+}
+
 // ─── Linear Issue Creation ──────────────────────────────────────────
 // Creates a single Linear issue via the GraphQL API.
 // Called once per annotation from the content script's send handler.
@@ -518,7 +549,7 @@ async function uploadScreenshotToLinear(apiKey, dataUrl) {
 }
 
 async function handleCreateLinearIssue(msg) {
-  const { apiKey, teamId, projectId, labelId, title, annotationId, fields } = msg;
+  const { apiKey, teamId, projectId, labelId, stateId, title, annotationId, fields } = msg;
   if (!apiKey || !teamId) {
     return { success: false, error: "Missing API key or team ID" };
   }
@@ -542,6 +573,7 @@ async function handleCreateLinearIssue(msg) {
     };
     if (projectId) input.projectId = projectId;
     if (labelId) input.labelIds = [labelId];
+    if (stateId) input.stateId = stateId;
 
     const mutation = `
       mutation IssueCreate($input: IssueCreateInput!) {
@@ -636,6 +668,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     handleFetchLinearLabels(msg)
       .then((result) => sendResponse(result))
       .catch(() => sendResponse({ success: false, labels: [] }));
+    return true;
+  }
+  if (msg.type === "fetchLinearWorkflowStates") {
+    handleFetchLinearWorkflowStates(msg)
+      .then((result) => sendResponse(result))
+      .catch(() => sendResponse({ success: false, stateId: null }));
     return true;
   }
   if (msg.type === "createLinearIssue") {

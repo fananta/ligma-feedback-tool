@@ -51,7 +51,8 @@ The `agentationPatchPlugin()` does string replacements on the agentation library
 ### Background Service Worker (`background.js`)
 - Per-tab activation state via in-memory `Set` + icon management
 - Screenshot pipeline: `captureFullTab` on mousedown → `cropScreenshot` on annotate → OffscreenCanvas crop → cache in `chrome.storage.local` with `sc:` prefix
-- Linear API: validate key, fetch teams/projects/labels, create issues with uploaded screenshots
+- Linear API: validate key, fetch teams/projects/labels/workflow states, create issues with uploaded screenshots
+- Issue creation defaults to the first **Backlog** workflow state (fetched via `fetchLinearWorkflowStates` before send loop)
 - Auto-reinjects content scripts on extension reload/install
 - Deactivates on typed URL navigation (not refreshes/link clicks)
 
@@ -115,6 +116,12 @@ The repo commits `dist/content.js` so users can load unpacked without building. 
 |-----|---------|
 | `feedback-annotations-<pathname>` | Agentation's persisted annotations |
 | `feedback-toolbar-settings` | Agentation settings (markerClickBehavior, colors, etc.) |
+
+## Upgrade Path
+
+Settings are in `chrome.storage.local`, keyed to the extension ID. For unpacked extensions, Chrome generates the ID from the folder's absolute path:
+- **Same folder path** (replace files in-place): settings preserved, seamless upgrade
+- **Different folder path** (new download location): new extension ID, settings lost — user re-enters API key
 
 ## Common Pitfalls
 
