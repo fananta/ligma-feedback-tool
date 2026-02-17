@@ -10,16 +10,14 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 4. Enable **Developer mode** (top right toggle)
 5. Click **Load unpacked** and select the `ligma-feedback-tool` folder
 
-No build step required.
-
-### Updating the Extension
+#### Updating the Extension
 
 1. [**Download ligma-feedback-tool.zip**](https://github.com/fananta/ligma-feedback-tool/releases/latest/download/ligma-feedback-tool.zip)
 2. Unzip the file
 3. Ensure it's in the same directory as the past version. Replace the old folder and rename to exact same name (`ligma-feedback-tool`).
 4. Open `chrome://extensions` in Chrome
 5. **Reload** the extension with the reload button. Do not use load unpacked again.
-<img width="411" height="228" alt="image" src="https://github.com/user-attachments/assets/f9849d27-975d-4e26-a82e-95cdcb3df3a9" />
+<img width="411" height="228" alt="image" src="https://github.com/user-attachments/assets/f9849d27-975d-4e26-a82e-95cdcb3df3a9"/>
 
 ## Setup
 
