@@ -205,20 +205,29 @@ async function captureAnnotationScreenshot(annotation: any) {
   if (!isExtensionContextValid()) return;
 
   try {
-    // Expand bounding box by 50% in each direction for positional context
+    // Compute crop box: the larger of the padded element or the full viewport,
+    // centered on the annotated element.
     const bb = annotation.boundingBox;
-    const padX = bb.width * 0.25;  // 25% on each side = 150% total width
-    const padY = bb.height * 0.25; // 25% on each side = 150% total height
+    const padX = bb.width * 0.25;
+    const padY = bb.height * 0.25;
     const rawY = annotation.isFixed ? bb.y : bb.y - capturedScrollY;
+
+    const elemWidth = bb.width + padX * 2;
+    const elemHeight = bb.height + padY * 2;
+    const finalWidth = Math.max(elemWidth, window.innerWidth);
+    const finalHeight = Math.max(elemHeight, window.innerHeight);
+
+    const centerX = bb.x + bb.width / 2;
+    const centerY = rawY + bb.height / 2;
 
     const response = await chrome.runtime.sendMessage({
       type: "cropScreenshot",
       fullDataUrl: fullScreenshot,
       boundingBox: {
-        x: bb.x - padX,
-        y: rawY - padY,
-        width: bb.width + padX * 2,
-        height: bb.height + padY * 2,
+        x: centerX - finalWidth / 2,
+        y: centerY - finalHeight / 2,
+        width: finalWidth,
+        height: finalHeight,
       },
       devicePixelRatio: window.devicePixelRatio,
       annotationId: annotation.id,
@@ -598,6 +607,11 @@ function mount() {
       }
       .styles-module__hoverTooltip___bvLk7 {
         background: rgba(175, 82, 222, 0.9) !important;
+      }
+
+      /* ── Settings panel: align right edge flush with toolbar ── */
+      .styles-module__settingsPanel___OxX3Y {
+        right: 0 !important;
       }
     `;
     document.head.appendChild(overrideStyle);
