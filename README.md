@@ -1,8 +1,8 @@
-# Ligma
+## Ligma
 
 Chrome extension to annotate any page element, capture feedback with screenshots, and send to Linear.
 
-## Installation
+### Installation
 
 1. [**Download ligma-feedback-tool.zip**](https://github.com/fananta/ligma-feedback-tool/releases/latest/download/ligma-feedback-tool.zip)
 2. Unzip the file
@@ -10,16 +10,16 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 4. Enable **Developer mode** (top right toggle)
 5. Click **Load unpacked** and select the `ligma-feedback-tool` folder
 
-#### Updating the Extension
+### Updating the Extension
 
 1. [**Download ligma-feedback-tool.zip**](https://github.com/fananta/ligma-feedback-tool/releases/latest/download/ligma-feedback-tool.zip)
 2. Unzip the file
-3. Ensure it's in the same directory as the past version. Replace the old folder and rename to exact same name (`ligma-feedback-tool`).
+3. Ensure it's in the same directory as the past version. **Replace the old folder** and rename to exact same name (`ligma-feedback-tool`).
 4. Open `chrome://extensions` in Chrome
-5. **Reload** the extension with the reload button. Do not use load unpacked again.
+5. **Reload** the extension with the reload button
 <img width="411" height="228" alt="image" src="https://github.com/user-attachments/assets/f9849d27-975d-4e26-a82e-95cdcb3df3a9"/>
 
-## Setup
+### Setup
 
 1. Click the Ligma extension icon on any page to activate annotation mode
 2. Click the **⚙️ Settings** button in the toolbar
@@ -27,7 +27,7 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 4. Select your Team, Project, and Label from the dropdowns
 5. Status dot turns green when fully configured
 
-## Usage
+### Usage
 
 - **Toggle annotation mode** — click the extension icon or press `Cmd+Shift+X`
 - **Annotate** — click any element on the page, type your feedback
@@ -35,6 +35,6 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 - **Copy** — copies all annotations to clipboard as rich HTML with screenshots
 - **Send** — creates a Linear issue for each annotation with cropped screenshots
 
-## Changelog
+### Changelog
 
 * **v1.2** - Truncate long issue titles, expandable annotation textbox, reordered annotation payload, keyboard shortcut to toggle on/off (`Cmd+Shift+X`).
