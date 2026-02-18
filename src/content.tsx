@@ -44,10 +44,10 @@ function buildPlainTextOutput(): string {
 
   for (const a of getAnnotations()) {
     let block = "";
+    block += `Feedback: ${a.comment}\n`;
     block += `Page: ${page}\n`;
     block += `Element: ${a.element}\n`;
     block += `Location: ${a.fullPath || a.elementPath || ""}\n`;
-    block += `Feedback: ${a.comment}\n`;
     block += `Viewport: ${viewport}\n`;
     block += `Browser: ${ua}\n`;
 
@@ -71,10 +71,10 @@ function buildHtmlOutput(): string {
 
   getAnnotations().forEach((a: any, index: number) => {
     let html = "";
+    html += `<p><strong>Feedback:</strong> ${a.comment}</p>\n`;
     html += `<p><strong>Page:</strong> ${page}</p>\n`;
     html += `<p><strong>Element:</strong> ${a.element}</p>\n`;
     html += `<p><strong>Location:</strong> <span style="font-weight:normal">${(a.fullPath || a.elementPath || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span></p>\n`;
-    html += `<p><strong>Feedback:</strong> ${a.comment}</p>\n`;
     html += `<p><strong>Viewport:</strong> ${viewport}</p>\n`;
     html += `<p><strong>Browser:</strong> ${ua}</p>\n`;
 
@@ -440,6 +440,14 @@ function mount() {
         display: none !important;
       }
 
+      /* ── Expandable annotation textarea ──
+         Override agentation's resize:none to allow vertical resize. */
+      .styles-module__textarea___jrSae {
+        resize: vertical !important;
+        min-height: 52px !important;
+        max-height: 200px !important;
+      }
+
       /* ── Adjust toolbar expanded width ──
          Buttons: Settings(34) + Trash(34) + Copy(34) + Divider(5) + Send(34) = 141px
          Padding: 15px cushion each side = 30px. Total content+cushion = 183px (after rounding). */
@@ -714,7 +722,10 @@ function mount() {
     // travel through chrome.runtime.sendMessage.
     for (const annotation of annotations) {
       const feedback = annotation.comment || "No feedback provided";
-      const title = `Feedback: ${feedback}`;
+      const MAX_TITLE_LENGTH = 60;
+      const title = feedback.length > MAX_TITLE_LENGTH
+        ? feedback.slice(0, MAX_TITLE_LENGTH - 1) + "…"
+        : feedback;
 
       try {
         const result = await chrome.runtime.sendMessage({

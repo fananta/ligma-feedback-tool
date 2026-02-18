@@ -16533,7 +16533,7 @@
                                     ] }),
                                     /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: styles_module_default2.settingsVersion, children: [
                                       "v",
-                                      "1.1"
+                                      "1.2"
                                     ] }),
                                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                                       "button",
@@ -17491,13 +17491,13 @@
     const blocks = [];
     for (const a of getAnnotations()) {
       let block = "";
+      block += `Feedback: ${a.comment}
+`;
       block += `Page: ${page}
 `;
       block += `Element: ${a.element}
 `;
       block += `Location: ${a.fullPath || a.elementPath || ""}
-`;
-      block += `Feedback: ${a.comment}
 `;
       block += `Viewport: ${viewport}
 `;
@@ -17514,13 +17514,13 @@
     const sections = [];
     getAnnotations().forEach((a, index) => {
       let html = "";
+      html += `<p><strong>Feedback:</strong> ${a.comment}</p>
+`;
       html += `<p><strong>Page:</strong> ${page}</p>
 `;
       html += `<p><strong>Element:</strong> ${a.element}</p>
 `;
       html += `<p><strong>Location:</strong> <span style="font-weight:normal">${(a.fullPath || a.elementPath || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span></p>
-`;
-      html += `<p><strong>Feedback:</strong> ${a.comment}</p>
 `;
       html += `<p><strong>Viewport:</strong> ${viewport}</p>
 `;
@@ -17800,6 +17800,14 @@
         display: none !important;
       }
 
+      /* ── Expandable annotation textarea ──
+         Override agentation's resize:none to allow vertical resize. */
+      .styles-module__textarea___jrSae {
+        resize: vertical !important;
+        min-height: 52px !important;
+        max-height: 200px !important;
+      }
+
       /* ── Adjust toolbar expanded width ──
          Buttons: Settings(34) + Trash(34) + Copy(34) + Divider(5) + Send(34) = 141px
          Padding: 15px cushion each side = 30px. Total content+cushion = 183px (after rounding). */
@@ -18032,7 +18040,8 @@
       const createdIssues = [];
       for (const annotation of annotations) {
         const feedback = annotation.comment || "No feedback provided";
-        const title = `Feedback: ${feedback}`;
+        const MAX_TITLE_LENGTH = 60;
+        const title = feedback.length > MAX_TITLE_LENGTH ? feedback.slice(0, MAX_TITLE_LENGTH - 1) + "…" : feedback;
         try {
           const result = await chrome.runtime.sendMessage({
             type: "createLinearIssue",

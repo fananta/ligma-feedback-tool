@@ -52,9 +52,13 @@ The `agentationPatchPlugin()` does string replacements on the agentation library
 - Per-tab activation state via in-memory `Set` + icon management
 - Screenshot pipeline: `captureFullTab` on mousedown → `cropScreenshot` on annotate → OffscreenCanvas crop → cache in `chrome.storage.local` with `sc:` prefix
 - Linear API: validate key, fetch teams/projects/labels/workflow states, create issues with uploaded screenshots
-- Issue creation defaults to the first **Backlog** workflow state (fetched via `fetchLinearWorkflowStates` before send loop)
+- Issue creation: title is the raw feedback text truncated to 60 chars (no prefix), defaults to first **Backlog** workflow state
+- Issue description order: Feedback → Page → Element → --- → Location → Viewport → Browser → Screenshot
 - Auto-reinjects content scripts on extension reload/install
 - Deactivates on typed URL navigation (not refreshes/link clicks)
+
+### Keyboard Shortcut
+`Cmd+Shift+X` (macOS) / `Ctrl+Shift+X` (Windows/Linux) toggles the extension on/off. Defined via the `_execute_action` command in `manifest.json`, which fires the existing `chrome.action.onClicked` listener in `background.js` — no additional handler code needed.
 
 ### Window Globals
 These are set by Vite patches or content.tsx and used for cross-boundary communication:
@@ -130,3 +134,5 @@ Settings are in `chrome.storage.local`, keyed to the extension ID. For unpacked 
 - **Service worker lifecycle**: MV3 service workers go idle after ~30s. Screenshots are persisted to `chrome.storage.local` (not in-memory) to survive restarts.
 - **Shadow DOM + portals**: The toolbar renders in Shadow DOM but markers/popovers portal to `document.body`. CSS overrides in content.tsx target both locations.
 - **`onAnnotationUpdate` callback doesn't fire**: Known issue. That's why we read directly from `window.__agAnnotations` instead of maintaining a parallel data store.
+- **Annotation textarea resize**: The library sets `resize: none` on the textarea. We override to `resize: vertical` via CSS in content.tsx with `min-height: 52px` and `max-height: 200px`.
+- **Payload order differs by output**: Copy (plain text + HTML) uses: Feedback → Page → Element → Location → Viewport → Browser. Linear issues add a `---` divider after Element before the metadata fields.

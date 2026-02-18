@@ -453,13 +453,13 @@ async function handleFetchLinearWorkflowStates(msg) {
 
 function buildIssueDescription(fields, screenshotUrl) {
   let md = "";
+  md += `**Feedback:** ${fields.feedback}\n`;
   md += `**Page:** ${fields.pageUrl}\n`;
   md += `**Element:** ${fields.element || "N/A"}\n`;
-  md += `**Location:** \`${fields.location || "N/A"}\`\n`;
-  md += `**Feedback:** ${fields.feedback}\n`;
 
   md += `\n---\n\n`;
 
+  md += `**Location:** \`${fields.location || "N/A"}\`\n`;
   md += `**Viewport:** ${fields.viewport}\n`;
   md += `**Browser:** ${fields.browser}\n`;
 

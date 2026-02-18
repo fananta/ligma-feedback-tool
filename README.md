@@ -29,8 +29,13 @@ Chrome extension to annotate any page element, capture feedback with screenshots
 
 ## Usage
 
-- **Toggle annotation mode** — click the extension icon in the browser toolbar
+- **Toggle annotation mode** — click the extension icon or press `⌘⇧X` (`Ctrl+Shift+X` on Windows/Linux)
 - **Annotate** — click any element on the page, type your feedback
 - **Delete** — hover over a marker and click the trash icon
 - **Copy** — copies all annotations to clipboard as rich HTML with screenshots
 - **Send** — creates a Linear issue for each annotation with cropped screenshots
+
+## Changelog
+
+### v1.2
+Truncate long Linear issue titles (60 char max), expandable annotation textbox, reordered annotation payload, keyboard shortcut to toggle (`⌘⇧X`).
